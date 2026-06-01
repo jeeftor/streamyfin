@@ -1,7 +1,7 @@
-import { Image } from "expo-image";
 import { useAtom } from "jotai";
 import { useMemo } from "react";
 import { View } from "react-native";
+import { ServerImage } from "@/components/common/ServerImage";
 import { apiAtom } from "@/providers/JellyfinProvider";
 
 type PosterProps = {
@@ -29,12 +29,10 @@ const ParentPoster: React.FC<PosterProps> = ({ id }) => {
 
   return (
     <View className='rounded-lg overflow-hidden border border-neutral-900'>
-      <Image
+      <ServerImage
         key={id}
         id={id}
-        source={{
-          uri: url,
-        }}
+        uri={url}
         cachePolicy={"memory-disk"}
         contentFit='cover'
         style={{

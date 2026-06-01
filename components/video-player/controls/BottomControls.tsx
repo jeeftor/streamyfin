@@ -111,7 +111,6 @@ export const BottomControls: FC<BottomControlsProps> = ({
   trickPlayUrl,
   trickplayInfo,
   time,
-  chapterPositions = [],
 }) => {
   const { settings } = useSettings();
   const { t } = useTranslation();

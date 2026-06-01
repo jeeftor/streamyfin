@@ -96,6 +96,7 @@ jobs:
           - "lint"
           - "check"
           - "format"
+          - "test:unit"
           - "typecheck"
 
     steps:
