@@ -1,12 +1,13 @@
 import { BlurView } from "expo-blur";
 import React from "react";
-import { Animated, Pressable, View } from "react-native";
+import { Animated, Pressable, type PressableProps, View } from "react-native";
 import { Text } from "@/components/common/Text";
 import { useScaledTVTypography } from "@/constants/TVTypography";
 import { scaleSize } from "@/utils/scaleSize";
 import { useTVFocusAnimation } from "./hooks/useTVFocusAnimation";
 
-export interface TVOptionButtonProps {
+export interface TVOptionButtonProps
+  extends Pick<PressableProps, "testID" | "accessibilityLabel"> {
   label: string;
   value: string;
   onPress: () => void;
@@ -15,7 +16,18 @@ export interface TVOptionButtonProps {
 }
 
 export const TVOptionButton = React.forwardRef<View, TVOptionButtonProps>(
-  ({ label, value, onPress, hasTVPreferredFocus, maxWidth }, ref) => {
+  (
+    {
+      label,
+      value,
+      onPress,
+      hasTVPreferredFocus,
+      maxWidth,
+      testID,
+      accessibilityLabel,
+    },
+    ref,
+  ) => {
     const typography = useScaledTVTypography();
     const { focused, handleFocus, handleBlur, animatedStyle } =
       useTVFocusAnimation({ scaleAmount: 1.02, duration: 120 });
@@ -23,6 +35,8 @@ export const TVOptionButton = React.forwardRef<View, TVOptionButtonProps>(
     return (
       <Pressable
         ref={ref}
+        testID={testID}
+        accessibilityLabel={accessibilityLabel ?? label}
         onPress={onPress}
         onFocus={handleFocus}
         onBlur={handleBlur}

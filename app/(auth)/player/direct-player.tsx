@@ -1245,6 +1245,7 @@ export default function DirectPlayerPage() {
       >
         <VideoProvider>
           <View
+            testID='video-player'
             style={{
               flex: 1,
               backgroundColor: "black",

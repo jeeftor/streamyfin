@@ -59,6 +59,9 @@ expo-env.d.ts
 .continuerc.json
 .env
 .env.local
+.envrc
+.maestro/
+tests/maestro/artifacts/
 
 # Secrets and Credentials
 pc-api-7079014811501811218-719-3b9f15aeccf8.json
@@ -80,6 +83,7 @@ build/
 !.eas/build/
 !.eas/build/**
 .claude/
+.direnv/
 .agents/skills/**
 skills-lock.json
 

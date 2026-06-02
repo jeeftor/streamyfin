@@ -1,0 +1,355 @@
+name: 🧪 Maestro Android E2E
+
+on:
+  workflow_dispatch:
+    inputs:
+      reuse_apk:
+        description: "Reuse the most recent Android APK cache for Maestro/Jellyfin infra debugging."
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches: [feature/maestr-dev]
+  pull_request:
+    branches: [develop, master]
+    paths:
+      - ".github/workflows/maestro-simple-login.yml"
+      - "android/**"
+      - "app/**"
+      - "assets/**"
+      - "components/**"
+      - "constants/**"
+      - "hooks/**"
+      - "modules/**"
+      - "plugins/**"
+      - "providers/**"
+      - "scripts/**"
+      - "tests/fixtures/jellyfin/**"
+      - "tests/maestro/**"
+      - "translations/**"
+      - "utils/**"
+      - "app.config.js"
+      - "app.json"
+      - "bun.lock"
+      - "Makefile"
+      - "package.json"
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  android-e2e:
+    name: ${{ matrix.label }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - device: phone
+            label: 📱 Android phone play Steamboat Willie
+            maestro_target: android
+            expo_tv: "0"
+            api_level: 36
+            prebuild_command: bun run prebuild
+            apk_cache_name: android-phone-release-apk
+            gradle_log: gradle-assemble-phone-release.log
+            emulator_target: google_apis
+            emulator_profile: pixel_6
+            flow_name: play-steamboat-willie
+            artifact_name: maestro-phone-play-steamboat-artifacts
+          - device: tv
+            label: 📺 Android TV play Steamboat Willie
+            maestro_target: android-tv
+            expo_tv: "1"
+            api_level: 36
+            prebuild_command: bun run prebuild:tv
+            apk_cache_name: android-tv-release-apk
+            gradle_log: gradle-assemble-tv-release.log
+            emulator_target: google-tv
+            emulator_profile: tv_1080p
+            flow_name: tv-play-steamboat-willie
+            artifact_name: maestro-tv-play-steamboat-artifacts
+
+    env:
+      ENV_FILE: tests/maestro/.env.local
+      MAESTRO_APP_ID: com.fredrikburmester.streamyfin
+      MAESTRO_PLATFORM: android
+      MAESTRO_TARGET: ${{ matrix.maestro_target }}
+      MAESTRO_USERNAME: admin
+      MAESTRO_PASSWORD: admin
+      MAESTRO_FLOW_NAME: ${{ matrix.flow_name }}
+      TV_API_LEVEL: ${{ matrix.api_level }}
+      TV_EMULATOR_TARGET: ${{ matrix.emulator_target }}
+      TV_EMULATOR_PROFILE: ${{ matrix.emulator_profile }}
+
+    steps:
+      - name: 🗑️ Free disk space
+        uses: BRAINSia/free-disk-space@7048ffbf50819342ac964ef3998a51c2564a8a75 # v2.1.3
+        with:
+          tool-cache: false
+          mandb: true
+          android: false
+          dotnet: true
+          haskell: true
+          large-packages: false
+          docker-images: true
+          swap-storage: false
+
+      - name: 📥 Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+          submodules: recursive
+          show-progress: false
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
+        with:
+          node-version: "24.x"
+
+      - name: ☕ Setup Java
+        uses: actions/setup-java@dded0888837ed1f317902acf8a20df0ad188d165 # v5.0.0
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: 🍞 Setup Bun
+        uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
+        with:
+          bun-version: latest
+
+      - name: 💾 Cache Bun dependencies
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.bun/install/cache
+          key: ${{ runner.os }}-${{ runner.arch }}-bun-maestro-${{ hashFiles('bun.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-${{ runner.arch }}-bun-maestro-
+            ${{ runner.os }}-${{ runner.arch }}-bun-
+
+      - name: 💾 Cache Gradle
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            android/.gradle
+          key: ${{ runner.os }}-gradle-maestro-${{ matrix.device }}-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-maestro-${{ matrix.device }}-
+            ${{ runner.os }}-gradle-maestro-
+            ${{ runner.os }}-gradle-
+
+      - name: 💾 Cache Jellyfin fixture media
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: tests/fixtures/jellyfin/media
+          key: ${{ runner.os }}-jellyfin-media-${{ hashFiles('tests/fixtures/jellyfin/scripts/download-media.sh') }}
+          restore-keys: |
+            ${{ runner.os }}-jellyfin-media-
+
+      - name: 💾 Cache Maestro CLI
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: ~/.maestro
+          key: ${{ runner.os }}-maestro-cli-v1
+
+      - name: 📦 Install dependencies
+        run: |
+          rm -f bun.lock
+          for attempt in 1 2 3; do
+            if bun install --network-concurrency 8; then
+              break
+            fi
+            if [ "$attempt" -eq 3 ]; then
+              exit 1
+            fi
+            sleep $((attempt * 10))
+          done
+          bun run submodule-reload
+
+      - name: 🎞️ Install media tooling
+        run: |
+          if ! command -v ffmpeg >/dev/null 2>&1; then
+            sudo apt-get update
+            sudo apt-get install -y ffmpeg
+          fi
+
+      - name: 🎞️ Prepare Jellyfin fixture media
+        run: make jellyfin-download-media
+
+      - name: 🐳 Start Jellyfin fixture
+        run: make jellyfin-up
+
+      - name: 🧪 Test Jellyfin fixture
+        run: make jellyfin-api-test
+
+      - name: 🧰 Install Maestro CLI
+        run: |
+          if [ ! -x "$HOME/.maestro/bin/maestro" ]; then
+            curl -fsSL "https://get.maestro.mobile.dev" | bash
+          fi
+          echo "$HOME/.maestro/bin" >> "$GITHUB_PATH"
+
+      - name: 🔑 Compute Android APK cache key
+        id: android-apk-cache-key
+        run: |
+          key=$({
+            printf 'device=%s\n' "${{ matrix.device }}"
+            git ls-files \
+              android \
+              app \
+              assets \
+              components \
+              constants \
+              hooks \
+              modules \
+              patches \
+              plugins \
+              providers \
+              scripts \
+              translations \
+              utils \
+              app.config.js \
+              app.json \
+              bun.lock \
+              package.json \
+              | sort \
+              | xargs sha256sum
+          } | sha256sum | awk '{ print $1 }')
+          printf 'APK cache key input hash: %s\n' "$key"
+          printf 'value=%s\n' "$key" >> "$GITHUB_OUTPUT"
+
+      - name: 🛠️ Generate Android project
+        run: ${{ matrix.prebuild_command }}
+
+      - name: 💾 Cache Android release APK
+        id: android-apk-cache
+        uses: actions/cache/restore@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: android/app/build/outputs/apk/release/app-release.apk
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.apk_cache_name }}-${{ steps.android-apk-cache-key.outputs.value }}
+          restore-keys: |
+            ${{ github.event_name == 'workflow_dispatch' && inputs.reuse_apk == true && format('{0}-{1}-{2}-', runner.os, runner.arch, matrix.apk_cache_name) || 'unused-android-release-apk-restore-key-' }}
+
+      - name: 🔎 Check Android release APK cache
+        id: android-apk
+        run: |
+          if [ -f android/app/build/outputs/apk/release/app-release.apk ]; then
+            echo "cached=true" >> "$GITHUB_OUTPUT"
+            ls -lh android/app/build/outputs/apk/release/app-release.apk
+          else
+            echo "cached=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: 🏗️ Build release APK
+        if: steps.android-apk.outputs.cached != 'true'
+        timeout-minutes: 35
+        env:
+          EXPO_TV: ${{ matrix.expo_tv }}
+          NODE_ENV: production
+          GRADLE_OPTS: -Dorg.gradle.daemon=false -Dorg.gradle.caching=true -Dorg.gradle.workers.max=2 -Xmx4g
+        run: |
+          set -o pipefail
+          mkdir -p tests/maestro/artifacts
+          cd android
+          ./gradlew assembleRelease \
+            -PreactNativeArchitectures=x86_64 \
+            -Pandroid.enablePngCrunchInReleaseBuilds=false \
+            --build-cache \
+            --no-daemon \
+            --stacktrace \
+            --info 2>&1 | tee "../tests/maestro/artifacts/${{ matrix.gradle_log }}"
+
+      - name: ✅ Verify Android release APK
+        run: test -f android/app/build/outputs/apk/release/app-release.apk && ls -lh android/app/build/outputs/apk/release/app-release.apk
+
+      - name: 💾 Save Android release APK cache
+        if: steps.android-apk.outputs.cached != 'true'
+        uses: actions/cache/save@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
+        with:
+          path: android/app/build/outputs/apk/release/app-release.apk
+          key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.apk_cache_name }}-${{ steps.android-apk-cache-key.outputs.value }}
+
+      - name: ⚙️ Enable emulator CPU acceleration
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: 🚀 Run Maestro play flow
+        if: matrix.device != 'tv'
+        timeout-minutes: 20
+        uses: ReactiveCircus/android-emulator-runner@1dcd0090116d15e7c562f8db72807de5e036a4ed # v2.34.0
+        with:
+          api-level: ${{ matrix.api_level }}
+          arch: x86_64
+          profile: ${{ matrix.emulator_profile }}
+          target: ${{ matrix.emulator_target }}
+          emulator-options: -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim
+          disable-animations: true
+          script: sh tests/maestro/run-android-emulator-flow.sh "${{ matrix.device }}" "${{ matrix.flow_name }}"
+
+      - name: 📺 Install TV emulator SDK
+        if: matrix.device == 'tv'
+        timeout-minutes: 8
+        run: sh tests/maestro/run-tv-debug-step.sh install-sdk
+
+      - name: 📺 Create TV AVD
+        if: matrix.device == 'tv'
+        timeout-minutes: 3
+        run: sh tests/maestro/run-tv-debug-step.sh create-avd
+
+      - name: 📺 Run TV emulator and Maestro play flow
+        if: matrix.device == 'tv'
+        timeout-minutes: 30
+        run: |
+          set +e
+          status=0
+
+          sh tests/maestro/run-tv-debug-step.sh start
+          status=$?
+
+          if [ "$status" -eq 0 ]; then
+            sh tests/maestro/run-tv-debug-step.sh install-apk
+            status=$?
+          fi
+
+          if [ "$status" -eq 0 ]; then
+            sh tests/maestro/run-tv-debug-step.sh adb-launch
+            status=$?
+          fi
+
+          if [ "$status" -eq 0 ]; then
+            sh tests/maestro/run-tv-debug-step.sh maestro-flow
+            status=$?
+          fi
+
+          sh tests/maestro/run-tv-debug-step.sh stop || true
+          exit "$status"
+
+      - name: 🧾 Dump Jellyfin logs
+        if: failure()
+        working-directory: tests/fixtures/jellyfin
+        run: |
+          mkdir -p ../../maestro/artifacts
+          docker compose logs --no-color > ../../maestro/artifacts/jellyfin-compose.log || true
+
+      - name: 📤 Upload Maestro artifacts
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: tests/maestro/artifacts
+          if-no-files-found: warn
+          retention-days: 7
+
+      - name: 🧹 Stop Jellyfin fixture
+        if: always()
+        run: make jellyfin-down

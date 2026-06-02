@@ -110,6 +110,7 @@ export const TVAddUserForm: React.FC<TVAddUserFormProps> = ({
           }}
         >
           <TVInput
+            testID='username-input'
             placeholder={t("login.username_placeholder")}
             value={credentials.username}
             onChangeText={(text) =>
@@ -139,6 +140,7 @@ export const TVAddUserForm: React.FC<TVAddUserFormProps> = ({
         >
           <TVInput
             ref={passwordInputRef}
+            testID='password-input'
             placeholder={t("login.password_placeholder")}
             value={credentials.password}
             onChangeText={(text) =>
@@ -171,6 +173,7 @@ export const TVAddUserForm: React.FC<TVAddUserFormProps> = ({
         {/* Login Button */}
         <View style={{ marginBottom: scaleSize(16) }}>
           <Button
+            testID='login-button'
             onPress={handleLogin}
             loading={loading}
             disabled={!credentials.username.trim() || loading}
@@ -182,6 +185,7 @@ export const TVAddUserForm: React.FC<TVAddUserFormProps> = ({
 
         {/* Quick Connect Button */}
         <Button
+          testID='quick-connect-button'
           onPress={onQuickConnect}
           color='black'
           className='bg-neutral-800 border border-neutral-700'

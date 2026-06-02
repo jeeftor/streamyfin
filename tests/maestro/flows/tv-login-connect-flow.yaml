@@ -1,0 +1,15 @@
+appId: ${MAESTRO_APP_ID}
+name: TVLoginConnectFlow
+---
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/03-tv-server-url-entered
+- tapOn:
+    id: "connect-button"
+- extendedWaitUntil:
+    visible:
+      id: "username-input"
+    timeout: 60000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/04-tv-login-screen
+- tapOn:
+    id: "username-input"

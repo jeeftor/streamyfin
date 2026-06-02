@@ -1,9 +1,16 @@
 import React from "react";
-import { Animated, Pressable, View, type ViewStyle } from "react-native";
+import {
+  Animated,
+  Pressable,
+  type PressableProps,
+  View,
+  type ViewStyle,
+} from "react-native";
 import { scaleSize } from "@/utils/scaleSize";
 import { useTVFocusAnimation } from "./hooks/useTVFocusAnimation";
 
-export interface TVButtonProps {
+export interface TVButtonProps
+  extends Pick<PressableProps, "testID" | "accessibilityLabel"> {
   onPress: () => void;
   children: React.ReactNode;
   variant?: "primary" | "secondary" | "glass";
@@ -64,6 +71,8 @@ export const TVButton: React.FC<TVButtonProps> = ({
   refSetter,
   nextFocusDown,
   nextFocusUp,
+  testID,
+  accessibilityLabel,
 }) => {
   const { focused, handleFocus, handleBlur, animatedStyle } =
     useTVFocusAnimation({ scaleAmount });
@@ -73,6 +82,8 @@ export const TVButton: React.FC<TVButtonProps> = ({
   return (
     <Pressable
       ref={refSetter}
+      testID={testID}
+      accessibilityLabel={accessibilityLabel}
       onPress={onPress}
       onFocus={handleFocus}
       onBlur={handleBlur}

@@ -1,0 +1,61 @@
+appId: ${MAESTRO_APP_ID}
+name: TVSimpleFlow
+---
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/00-tv-launched-raw
+- extendedWaitUntil:
+    visible:
+      id: "add-server-button"
+    timeout: 60000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/01-tv-server-selection
+- tapOn:
+    id: "add-server-button"
+- extendedWaitUntil:
+    visible:
+      id: "server-url-input"
+    timeout: 30000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/02-tv-add-server
+- tapOn:
+    id: "server-url-input"
+- inputText: "${MAESTRO_SERVER_URL}"
+- pressKey: Enter
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/03-tv-server-url-entered
+- tapOn:
+    id: "connect-button"
+- extendedWaitUntil:
+    visible:
+      id: "username-input"
+    timeout: 60000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/04-tv-login-screen
+- tapOn:
+    id: "username-input"
+- inputText: "${MAESTRO_USERNAME}"
+- pressKey: Enter
+- runFlow:
+    when:
+      true: ${MAESTRO_PASSWORD != null && MAESTRO_PASSWORD.length > 0}
+    commands:
+      - tapOn:
+          id: "password-input"
+      - inputText: "${MAESTRO_PASSWORD}"
+      - pressKey: Enter
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/05-tv-credentials-entered
+- tapOn:
+    id: "login-button"
+    optional: true
+- extendedWaitUntil:
+    visible: "Welcome to Streamyfin|Recently Added|Continue Watching|Steamboat Willie|Big Buck Bunny|No Items"
+    timeout: 60000
+- tapOn:
+    id: "intro-done-button"
+    optional: true
+- extendedWaitUntil:
+    visible: "Recently Added|Continue Watching|Steamboat Willie|Big Buck Bunny|No Items"
+    timeout: 60000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/06-tv-home

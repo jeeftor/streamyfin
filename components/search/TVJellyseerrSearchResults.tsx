@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Animated, FlatList, Pressable, View } from "react-native";
 import { ServerImage } from "@/components/common/ServerImage";
 import { Text } from "@/components/common/Text";
+import { getJellyseerrItemTestId } from "@/components/common/testIds";
 import { useTVFocusAnimation } from "@/components/tv/hooks/useTVFocusAnimation";
 import { useScaledTVTypography } from "@/constants/TVTypography";
 import { useJellyseerr } from "@/hooks/useJellyseerr";
@@ -45,6 +46,8 @@ const TVJellyseerrPoster: React.FC<TVJellyseerrPosterProps> = ({
 
   return (
     <Pressable
+      testID={getJellyseerrItemTestId(item)}
+      accessibilityLabel={title}
       onPress={onPress}
       onFocus={handleFocus}
       onBlur={handleBlur}
@@ -158,7 +161,13 @@ const TVJellyseerrPersonPoster: React.FC<TVJellyseerrPersonPosterProps> = ({
     : null;
 
   return (
-    <Pressable onPress={onPress} onFocus={handleFocus} onBlur={handleBlur}>
+    <Pressable
+      testID={getJellyseerrItemTestId(item)}
+      accessibilityLabel={item.name}
+      onPress={onPress}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+    >
       <Animated.View
         style={[
           animatedStyle,

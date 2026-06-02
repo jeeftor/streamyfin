@@ -14,6 +14,7 @@ import { Animated, Easing, FlatList, Pressable, View } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { ServerImage } from "@/components/common/ServerImage";
 import { Text } from "@/components/common/Text";
+import { getJellyfinItemTestId } from "@/components/common/testIds";
 import { Loader } from "@/components/Loader";
 import { useScaledTVTypography } from "@/constants/TVTypography";
 import useRouter from "@/hooks/useAppRouter";
@@ -112,6 +113,8 @@ const TVLibraryRow: React.FC<{
 
   return (
     <Pressable
+      testID={getJellyfinItemTestId(library)}
+      accessibilityLabel={library.Name ?? undefined}
       onPress={onPress}
       onFocus={() => {
         setFocused(true);

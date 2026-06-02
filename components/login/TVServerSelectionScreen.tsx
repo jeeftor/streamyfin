@@ -126,6 +126,7 @@ export const TVServerSelectionScreen: React.FC<
 
           {/* Add Server Button */}
           <TVAddIcon
+            testID='add-server-button'
             label={t("server.add_server")}
             onPress={onAddServer}
             hasTVPreferredFocus={!hasServers}

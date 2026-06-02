@@ -29,6 +29,8 @@ export const TouchableJellyseerrRouter: React.FC<PropsWithChildren<Props>> = ({
   posterSrc,
   mediaType,
   children,
+  testID,
+  accessibilityLabel,
   ...props
 }) => {
   const router = useRouter();
@@ -39,6 +41,11 @@ export const TouchableJellyseerrRouter: React.FC<PropsWithChildren<Props>> = ({
   if (from === "(home)" || from === "(search)" || from === "(libraries)")
     return (
       <TouchableOpacity
+        testID={
+          testID ??
+          (result?.id ? `jellyseerr-item-${mediaType}-${result.id}` : undefined)
+        }
+        accessibilityLabel={accessibilityLabel ?? mediaTitle}
         onPress={() => {
           if (!result) return;
 

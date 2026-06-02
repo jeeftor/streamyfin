@@ -62,6 +62,7 @@ export default function TabLayout() {
           name='(home)'
           options={{
             title: t("tabs.home"),
+            tabBarButtonTestID: "tab-home",
             tabBarIcon:
               Platform.OS === "android"
                 ? (_e) => require("@/assets/icons/house.fill.png")
@@ -78,6 +79,7 @@ export default function TabLayout() {
           options={{
             role: "search",
             title: t("tabs.search"),
+            tabBarButtonTestID: "tab-search",
             tabBarIcon:
               Platform.OS === "android"
                 ? (_e) => require("@/assets/icons/magnifyingglass.png")
@@ -88,6 +90,7 @@ export default function TabLayout() {
           name='(favorites)'
           options={{
             title: t("tabs.favorites"),
+            tabBarButtonTestID: "tab-favorites",
             tabBarIcon:
               Platform.OS === "android"
                 ? (_e) => require("@/assets/icons/heart.fill.png")
@@ -98,6 +101,7 @@ export default function TabLayout() {
           name='(watchlists)'
           options={{
             title: t("watchlists.title"),
+            tabBarButtonTestID: "tab-watchlists",
             tabBarItemHidden:
               !settings?.streamyStatsServerUrl || settings?.hideWatchlistsTab,
             tabBarIcon:
@@ -110,6 +114,7 @@ export default function TabLayout() {
           name='(libraries)'
           options={{
             title: t("tabs.library"),
+            tabBarButtonTestID: "tab-library",
             tabBarIcon:
               Platform.OS === "android"
                 ? (_e) => require("@/assets/icons/server.rack.png")
@@ -120,6 +125,7 @@ export default function TabLayout() {
           name='(custom-links)'
           options={{
             title: t("tabs.custom_links"),
+            tabBarButtonTestID: "tab-custom-links",
             tabBarItemHidden: !settings?.showCustomMenuLinks,
             tabBarIcon:
               Platform.OS === "android"
@@ -131,6 +137,7 @@ export default function TabLayout() {
           name='(settings)'
           options={{
             title: t("tabs.settings"),
+            tabBarButtonTestID: "tab-settings",
             tabBarItemHidden: !Platform.isTV,
             tabBarIcon:
               Platform.OS === "android"

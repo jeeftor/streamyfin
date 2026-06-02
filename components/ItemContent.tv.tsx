@@ -729,6 +729,8 @@ export const ItemContentTV: React.FC<ItemContentTVProps> = React.memo(
                 }}
               >
                 <TVButton
+                  testID='play-button'
+                  accessibilityLabel='Play button'
                   onPress={handlePlay}
                   hasTVPreferredFocus
                   variant='primary'
@@ -767,6 +769,7 @@ export const ItemContentTV: React.FC<ItemContentTVProps> = React.memo(
               >
                 {/* Quality selector */}
                 <TVOptionButton
+                  testID='quality-button'
                   label={t("item_card.quality")}
                   value={selectedQualityLabel}
                   maxWidth={200}
@@ -782,6 +785,7 @@ export const ItemContentTV: React.FC<ItemContentTVProps> = React.memo(
                 {/* Media source selector (only if multiple sources) */}
                 {mediaSources.length > 1 && (
                   <TVOptionButton
+                    testID='media-source-button'
                     label={t("item_card.video")}
                     value={selectedMediaSourceLabel}
                     maxWidth={280}
@@ -798,6 +802,7 @@ export const ItemContentTV: React.FC<ItemContentTVProps> = React.memo(
                 {/* Audio selector */}
                 {audioTracks.length > 0 && (
                   <TVOptionButton
+                    testID='audio-button'
                     label={t("item_card.audio")}
                     value={selectedAudioLabel}
                     maxWidth={280}
@@ -815,6 +820,7 @@ export const ItemContentTV: React.FC<ItemContentTVProps> = React.memo(
                 {(subtitleStreams.length > 0 ||
                   selectedOptions?.subtitleIndex !== undefined) && (
                   <TVOptionButton
+                    testID='subtitle-button'
                     label={t("item_card.subtitles.label")}
                     value={selectedSubtitleLabel}
                     maxWidth={280}

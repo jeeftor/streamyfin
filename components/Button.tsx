@@ -119,8 +119,15 @@ export const Button: React.FC<PropsWithChildren<ButtonProps>> = ({
 
   return Platform.isTV ? (
     <Pressable
+      {...props}
       className='w-full'
-      onPress={onPress}
+      onPress={() => {
+        if (!loading && !disabled && onPress) {
+          onPress();
+        }
+      }}
+      disabled={disabled || loading}
+      focusable={!disabled && !loading}
       onFocus={() => {
         setFocused(true);
         animateTo(1.03);

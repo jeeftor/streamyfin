@@ -10,6 +10,7 @@ interface TVSearchTabBadgeProps {
   label: string;
   isSelected: boolean;
   onPress: () => void;
+  testID?: string;
   hasTVPreferredFocus?: boolean;
   disabled?: boolean;
 }
@@ -18,6 +19,7 @@ const TVSearchTabBadge: React.FC<TVSearchTabBadgeProps> = ({
   label,
   isSelected,
   onPress,
+  testID,
   hasTVPreferredFocus = false,
   disabled = false,
 }) => {
@@ -39,6 +41,8 @@ const TVSearchTabBadge: React.FC<TVSearchTabBadgeProps> = ({
 
   return (
     <Pressable
+      testID={testID}
+      accessibilityLabel={label}
       onPress={onPress}
       onFocus={handleFocus}
       onBlur={handleBlur}
@@ -102,12 +106,14 @@ export const TVSearchTabBadges: React.FC<TVSearchTabBadgesProps> = ({
     >
       <TVSearchTabBadge
         label='Library'
+        testID='search-type-library'
         isSelected={searchType === "Library"}
         onPress={() => setSearchType("Library")}
         disabled={disabled}
       />
       <TVSearchTabBadge
         label='Discover'
+        testID='search-type-discover'
         isSelected={searchType === "Discover"}
         onPress={() => setSearchType("Discover")}
         disabled={disabled}

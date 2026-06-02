@@ -236,6 +236,7 @@ export const TVSearchPage: React.FC<TVSearchPageProps> = ({
             forwards typed text into the existing query pipeline via setSearch;
             our own results grid renders below. */}
         <View
+          testID='search-input-container'
           style={{
             marginBottom: 24,
             marginHorizontal: HORIZONTAL_PADDING,
@@ -243,6 +244,7 @@ export const TVSearchPage: React.FC<TVSearchPageProps> = ({
           }}
         >
           <TvSearchView
+            testID='search-input'
             style={{ width: "100%", height: "100%" }}
             placeholder={t("search.search")}
             onChangeText={(e) => setSearch(e.nativeEvent.text)}

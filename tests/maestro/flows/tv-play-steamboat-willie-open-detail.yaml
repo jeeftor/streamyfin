@@ -1,0 +1,16 @@
+appId: ${MAESTRO_APP_ID}
+name: TVPlaySteamboatWillieOpenDetail
+---
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/07-tv-home-screen
+- extendedWaitUntil:
+    visible:
+      id: "${MAESTRO_STEAMBOAT_WILLIE_ID}"
+    timeout: 30000
+- tapOn:
+    id: "${MAESTRO_STEAMBOAT_WILLIE_ID}"
+- extendedWaitUntil:
+    visible: "Animation|Comedy"
+    timeout: 30000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/08-tv-movie-detail-top

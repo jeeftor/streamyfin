@@ -6,12 +6,15 @@
       "!node_modules",
       "!ios",
       "!android",
+      "!build",
       "!Streamyfin.app",
       "!utils/jellyseerr",
       "!expo-env.d.ts",
       "!modules/**/android/build",
       "!.expo",
-      "!docs/jellyfin-openapi-stable.json"
+      "!docs/jellyfin-openapi-stable.json",
+      "!tests/fixtures/jellyfin/base_config",
+      "!tests/fixtures/jellyfin/config"
     ]
   },
   "linter": {

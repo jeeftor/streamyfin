@@ -3,11 +3,13 @@ import {
   Animated,
   Easing,
   Pressable,
+  type PressableProps,
   View,
   type ViewStyle,
 } from "react-native";
 
-export interface TVFocusablePosterProps {
+export interface TVFocusablePosterProps
+  extends Pick<PressableProps, "testID" | "accessibilityLabel"> {
   children: React.ReactNode;
   onPress: () => void;
   onLongPress?: () => void;
@@ -37,6 +39,8 @@ export const TVFocusablePoster: React.FC<TVFocusablePosterProps> = ({
   disabled = false,
   focusableWhenDisabled = false,
   refSetter,
+  testID,
+  accessibilityLabel,
 }) => {
   const [focused, setFocused] = useState(false);
   const scale = useRef(new Animated.Value(1)).current;
@@ -54,6 +58,8 @@ export const TVFocusablePoster: React.FC<TVFocusablePosterProps> = ({
   return (
     <Pressable
       ref={refSetter}
+      testID={testID}
+      accessibilityLabel={accessibilityLabel}
       onPress={onPress}
       onLongPress={onLongPress}
       onFocus={() => {

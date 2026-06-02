@@ -13,6 +13,7 @@ import { useFavorite } from "@/hooks/useFavorite";
 import { useMarkAsPlayed } from "@/hooks/useMarkAsPlayed";
 import { useDownload } from "@/providers/DownloadProvider";
 import { useOfflineMode } from "@/providers/OfflineModeProvider";
+import { getJellyfinItemTestId } from "./testIds";
 
 interface Props extends TouchableOpacityProps {
   item: BaseItemDto;
@@ -237,6 +238,8 @@ export const TouchableItemRouter: React.FC<PropsWithChildren<Props>> = ({
       <TouchableOpacity
         onLongPress={showActionSheet}
         onPress={handlePress}
+        testID={props.testID ?? getJellyfinItemTestId(item)}
+        accessibilityLabel={props.accessibilityLabel ?? item.Name ?? undefined}
         {...props}
       >
         {children}

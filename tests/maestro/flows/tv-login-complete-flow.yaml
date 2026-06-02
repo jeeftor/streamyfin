@@ -1,0 +1,19 @@
+appId: ${MAESTRO_APP_ID}
+name: TVLoginCompleteFlow
+---
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/05-tv-credentials-entered
+- tapOn:
+    id: "login-button"
+    optional: true
+- extendedWaitUntil:
+    visible: "Welcome to Streamyfin|Recently Added|Continue Watching|Steamboat Willie|Big Buck Bunny|No Items"
+    timeout: 180000
+- tapOn:
+    id: "intro-done-button"
+    optional: true
+- extendedWaitUntil:
+    visible: "Recently Added|Continue Watching|Steamboat Willie|Big Buck Bunny|No Items"
+    timeout: 180000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/06-tv-home

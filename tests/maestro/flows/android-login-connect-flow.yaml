@@ -1,0 +1,15 @@
+appId: ${MAESTRO_APP_ID}
+name: AndroidLoginConnectFlow
+---
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/02-server-url-entered
+- tapOn:
+    id: "connect-button"
+- extendedWaitUntil:
+    visible: "Username"
+    timeout: 30000
+- assertVisible: "Password"
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/03-login-screen
+- tapOn:
+    id: "username-input"

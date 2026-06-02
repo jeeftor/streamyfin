@@ -11,10 +11,11 @@ export interface TVAddIconProps {
   onPress: () => void;
   hasTVPreferredFocus?: boolean;
   disabled?: boolean;
+  testID?: string;
 }
 
 export const TVAddIcon = React.forwardRef<View, TVAddIconProps>(
-  ({ label, onPress, hasTVPreferredFocus, disabled = false }, ref) => {
+  ({ label, onPress, hasTVPreferredFocus, disabled = false, testID }, ref) => {
     const typography = useScaledTVTypography();
     const { focused, handleFocus, handleBlur, animatedStyle } =
       useTVFocusAnimation();
@@ -22,6 +23,7 @@ export const TVAddIcon = React.forwardRef<View, TVAddIconProps>(
     return (
       <Pressable
         ref={ref}
+        testID={testID}
         onPress={onPress}
         onFocus={handleFocus}
         onBlur={handleBlur}

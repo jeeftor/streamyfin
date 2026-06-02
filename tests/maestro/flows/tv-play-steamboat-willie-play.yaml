@@ -1,0 +1,17 @@
+appId: ${MAESTRO_APP_ID}
+name: TVPlaySteamboatWilliePlay
+---
+- extendedWaitUntil:
+    visible:
+      id: "video-player"
+    timeout: 45000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/09-tv-playing
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/10-tv-playing-5s
+- waitForAnimationToEnd:
+    timeout: 5000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/11-tv-playing-10s

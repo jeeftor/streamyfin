@@ -1,0 +1,25 @@
+appId: ${MAESTRO_APP_ID}
+name: AndroidLoginCompleteFlow
+---
+- hideKeyboard
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/04-credentials-entered
+- tapOn:
+    id: "login-button"
+- extendedWaitUntil:
+    visible: "Home|Welcome to Streamyfin|Continue Watching|Next Up|No Items"
+    timeout: 45000
+- runFlow:
+    when:
+      visible: "Welcome to Streamyfin"
+    commands:
+      - takeScreenshot:
+          path: ${MAESTRO_ARTIFACT_DIR}/05-intro-screen
+      - tapOn:
+          id: "intro-done-button"
+- extendedWaitUntil:
+    visible: "Home|Continue Watching|Next Up|No Items"
+    timeout: 30000
+- assertNotVisible: "Welcome to Streamyfin"
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/06-home

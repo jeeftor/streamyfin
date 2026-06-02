@@ -1,0 +1,15 @@
+appId: ${MAESTRO_APP_ID}
+name: AndroidLoginOpenFlow
+---
+- clearState
+- launchApp
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/00-launched-raw
+- extendedWaitUntil:
+    visible:
+      id: "server-url-input"
+    timeout: 60000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/01-launched
+- tapOn:
+    id: "server-url-input"

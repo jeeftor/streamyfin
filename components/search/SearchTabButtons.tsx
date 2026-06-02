@@ -29,6 +29,7 @@ export const SearchTabButtons: React.FC<SearchTabButtonsProps> = ({
       <Host style={{ height: 40, flex: 1 }}>
         <HStack spacing={8}>
           <Button
+            testID='search-type-library'
             modifiers={[
               buttonStyle(
                 searchType === "Library" ? "glassProminent" : "glass",
@@ -38,6 +39,7 @@ export const SearchTabButtons: React.FC<SearchTabButtonsProps> = ({
             label={t("search.library")}
           />
           <Button
+            testID='search-type-discover'
             modifiers={[
               buttonStyle(
                 searchType === "Discover" ? "glassProminent" : "glass",
@@ -55,14 +57,20 @@ export const SearchTabButtons: React.FC<SearchTabButtonsProps> = ({
   // Android UI
   return (
     <View className='flex flex-row gap-1 mr-1'>
-      <TouchableOpacity onPress={() => setSearchType("Library")}>
+      <TouchableOpacity
+        testID='search-type-library'
+        onPress={() => setSearchType("Library")}
+      >
         <Tag
           text={t("search.library")}
           textClass='p-1'
           className={searchType === "Library" ? "bg-purple-600" : undefined}
         />
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => setSearchType("Discover")}>
+      <TouchableOpacity
+        testID='search-type-discover'
+        onPress={() => setSearchType("Discover")}
+      >
         <Tag
           text={t("search.discover")}
           textClass='p-1'

@@ -12,6 +12,7 @@ import {
 } from "react-native";
 import { ProgressBar } from "@/components/common/ProgressBar";
 import { Text } from "@/components/common/Text";
+import { getJellyfinItemTestId } from "@/components/common/testIds";
 import { WatchedIndicator } from "@/components/WatchedIndicator";
 import { useScaledTVPosterSizes } from "@/constants/TVPosterSizes";
 import { useScaledTVTypography } from "@/constants/TVTypography";
@@ -71,6 +72,9 @@ export interface TVPosterCardProps {
 
   /** Custom image URL getter - if not provided, uses smart URL logic */
   imageUrlGetter?: (item: BaseItemDto) => string | undefined;
+
+  /** Stable selector for Maestro and automated tests. */
+  testID?: string;
 }
 
 /**
@@ -107,6 +111,7 @@ export const TVPosterCard: React.FC<TVPosterCardProps> = ({
   glowColor = "white",
   scaleAmount = 1.05,
   imageUrlGetter,
+  testID,
 }) => {
   const api = useAtomValue(apiAtom);
   const posterSizes = useScaledTVPosterSizes();
@@ -539,6 +544,8 @@ export const TVPosterCard: React.FC<TVPosterCardProps> = ({
         ref={refSetter}
         onPress={onPress}
         onLongPress={onLongPress}
+        testID={testID ?? getJellyfinItemTestId(item)}
+        accessibilityLabel={item.Name ?? undefined}
         onFocus={() => {
           setFocused(true);
           // Only animate scale when not using glass effect (glass handles its own focus visual)

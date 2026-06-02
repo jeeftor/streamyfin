@@ -1,0 +1,5 @@
+appId: ${MAESTRO_APP_ID}
+name: TVAttachSmoke
+---
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/00-tv-maestro-attached

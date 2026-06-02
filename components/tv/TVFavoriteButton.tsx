@@ -17,6 +17,8 @@ export const TVFavoriteButton: React.FC<TVFavoriteButtonProps> = ({
 
   return (
     <TVButton
+      testID='favorite-button'
+      accessibilityLabel='Favorite button'
       onPress={toggleFavorite}
       variant='glass'
       square

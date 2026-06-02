@@ -1,0 +1,21 @@
+appId: ${MAESTRO_APP_ID}
+name: TVLoginOpenFlow
+---
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/00-tv-launched-raw
+- extendedWaitUntil:
+    visible:
+      id: "add-server-button"
+    timeout: 60000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/01-tv-server-selection
+- tapOn:
+    id: "add-server-button"
+- extendedWaitUntil:
+    visible:
+      id: "server-url-input"
+    timeout: 30000
+- takeScreenshot:
+    path: ${MAESTRO_ARTIFACT_DIR}/02-tv-add-server
+- tapOn:
+    id: "server-url-input"

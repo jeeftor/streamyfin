@@ -22,6 +22,7 @@ export const TVInput = forwardRef<TextInput, TVInputProps>(
       hasTVPreferredFocus,
       disabled = false,
       style,
+      testID,
       ...props
     },
     ref,
@@ -65,6 +66,7 @@ export const TVInput = forwardRef<TextInput, TVInputProps>(
 
     return (
       <Pressable
+        testID={testID}
         onPress={() => localRef.current?.focus()}
         onFocus={handleFocus}
         onBlur={handleBlur}
@@ -85,6 +87,7 @@ export const TVInput = forwardRef<TextInput, TVInputProps>(
         >
           <TextInput
             ref={setInputRef}
+            testID={testID ? `${testID}-input` : undefined}
             placeholder={displayPlaceholder}
             placeholderTextColor='rgba(255,255,255,0.35)'
             allowFontScaling={false}

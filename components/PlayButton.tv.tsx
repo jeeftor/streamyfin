@@ -168,6 +168,7 @@ export const PlayButton: React.FC<Props> = ({
 
   return (
     <TouchableOpacity
+      testID='play-button'
       accessibilityLabel='Play button'
       accessibilityHint='Tap to play the media'
       onPress={onPress}

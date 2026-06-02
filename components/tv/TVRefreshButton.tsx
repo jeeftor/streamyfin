@@ -57,6 +57,8 @@ export const TVRefreshButton: React.FC<TVRefreshButtonProps> = ({
 
   return (
     <TVButton
+      testID='refresh-button'
+      accessibilityLabel='Refresh button'
       onPress={handleRefresh}
       variant='glass'
       square

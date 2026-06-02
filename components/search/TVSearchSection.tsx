@@ -3,6 +3,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { FlatList, View, type ViewProps } from "react-native";
 import { ServerImage } from "@/components/common/ServerImage";
 import { Text } from "@/components/common/Text";
+import { getJellyfinItemTestId } from "@/components/common/testIds";
 import { TVFocusablePoster } from "@/components/tv/TVFocusablePoster";
 import { TVPosterCard } from "@/components/tv/TVPosterCard";
 import { useScaledTVPosterSizes } from "@/constants/TVPosterSizes";
@@ -80,6 +81,8 @@ export const TVSearchSection: React.FC<TVSearchSectionProps> = ({
         return (
           <View style={{ marginRight: ITEM_GAP, width: 160 }}>
             <TVFocusablePoster
+              testID={getJellyfinItemTestId(item)}
+              accessibilityLabel={item.Name ?? undefined}
               onPress={() => onItemPress(item)}
               onLongPress={
                 onItemLongPress ? () => onItemLongPress(item) : undefined
@@ -146,6 +149,8 @@ export const TVSearchSection: React.FC<TVSearchSectionProps> = ({
         return (
           <View style={{ marginRight: ITEM_GAP, width: posterSizes.poster }}>
             <TVFocusablePoster
+              testID={getJellyfinItemTestId(item)}
+              accessibilityLabel={item.Name ?? undefined}
               onPress={() => onItemPress(item)}
               onLongPress={
                 onItemLongPress ? () => onItemLongPress(item) : undefined

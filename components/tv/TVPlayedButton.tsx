@@ -18,6 +18,8 @@ export const TVPlayedButton: React.FC<TVPlayedButtonProps> = ({
 
   return (
     <TVButton
+      testID='played-button'
+      accessibilityLabel='Played button'
       onPress={() => toggle(!isPlayed)}
       variant='glass'
       square
